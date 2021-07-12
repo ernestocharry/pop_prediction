@@ -25,17 +25,17 @@ def fit_funtion_error_line(x_3, parameters_3):
 
 # Model validation: prediction to populations in the years 2015 - 2020
 
-df = pd.read_csv('data/df.csv')  # Data download from API
-df_1 = pd.read_csv('data/df_1.csv')
-df_2 = pd.read_csv('data/df_2.csv')
-df_3 = pd.read_csv('data/df_3.csv')
-df_4 = pd.read_csv('data/df_4.csv')
+df = pd.read_csv('../data/df.csv')  # Data download from API
+df_1 = pd.read_csv('../data/df_1.csv')
+df_2 = pd.read_csv('../data/df_2.csv')
+df_3 = pd.read_csv('../data/df_3.csv')
+df_4 = pd.read_csv('../data/df_4.csv')
 
-df_group = pd.read_csv('data/df_group.csv', index_col=['countryiso3code', 'date'])  # df in group_by country
-df_group_1 = pd.read_csv('data/df_group_1.csv', index_col=['countryiso3code', 'date'])
-df_group_2 = pd.read_csv('data/df_group_2.csv', index_col=['countryiso3code', 'date'])
-df_group_3 = pd.read_csv('data/df_group_3.csv', index_col=['countryiso3code', 'date'])
-df_group_4 = pd.read_csv('data/df_group_4.csv', index_col=['countryiso3code', 'date'])
+df_group = pd.read_csv('../data/df_group.csv', index_col=['countryiso3code', 'date'])  # df in group_by country
+df_group_1 = pd.read_csv('../data/df_group_1.csv', index_col=['countryiso3code', 'date'])
+df_group_2 = pd.read_csv('../data/df_group_2.csv', index_col=['countryiso3code', 'date'])
+df_group_3 = pd.read_csv('../data/df_group_3.csv', index_col=['countryiso3code', 'date'])
+df_group_4 = pd.read_csv('../data/df_group_4.csv', index_col=['countryiso3code', 'date'])
 
 # df_group_min_mean_max = pd.read_csv('data/df_group_min_mean_max.csv')  # df with min, mean, max values for 2020 - 2025
 df_group_min_mean_max = df_group.copy()
@@ -132,7 +132,7 @@ for country in countries[0:5]:
             plt.hlines(2, x_adjustment[0], x_error_predict_extra[-1], color='purple')
             plt.hlines(-1.5, x_adjustment[0], x_error_predict_extra[-1], color='green')
             plt.hlines(1.5, x_adjustment[0], x_error_predict_extra[-1], color='green')
-            plt.show()
+            # plt.show()
 
             delta_y_adjustment_max = delta_y_adjustment.copy()
             delta_y_adjustment_min = delta_y_adjustment.copy()
@@ -199,13 +199,13 @@ df_group_min_mean_max.loc[df_group_min_mean_max['value_max'].isnull(), 'value_ma
     df_group_min_mean_max['value_max'].isnull(), 'value']
 
 
-df_group_min_mean_max.to_csv('model_validation/smooth.csv')
+df_group_min_mean_max.to_csv('smooth.csv')
 
 # --- ML Model
-df_group_min_mean_max = pd.read_csv('data/df_group_min_mean_max.csv')  # df with min, mean, max values for 2020 - 2025
-df_group_2_min_mean_max = pd.read_csv('data/df_group_min_mean_max_2.csv')
-df_group_3_min_mean_max = pd.read_csv('data/df_group_min_mean_max_3.csv')
-df_group_4_min_mean_max = pd.read_csv('data/df_group_min_mean_max_4.csv')
+df_group_min_mean_max = pd.read_csv('../data/df_group_min_mean_max.csv')  # df with min, mean, max values for 2020 - 2025
+df_group_2_min_mean_max = pd.read_csv('../data/df_group_min_mean_max_2.csv')
+df_group_3_min_mean_max = pd.read_csv('../data/df_group_min_mean_max_3.csv')
+df_group_4_min_mean_max = pd.read_csv('../data/df_group_min_mean_max_4.csv')
 
 df_group_min_mean_max.loc[df_group_min_mean_max['value_min'].isnull(), 'value_min'] = df_group_min_mean_max.loc[
     df_group_min_mean_max['value_min'].isnull(), 'value']
@@ -277,4 +277,4 @@ for country in countries:
         print("An exception occurred with ", country)
         total_countries_w_errros.append(country)
 
-df_all.to_csv('model_validation/ml_lineal.csv')
+df_all.to_csv('ml_lineal.csv')

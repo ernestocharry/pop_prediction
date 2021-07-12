@@ -48,7 +48,7 @@ total_countries_w_errros = []
 countries = df_group.index.get_level_values(0).unique()
 
 # Smooth Model
-for country in countries[0:5]:
+for country in countries:
     if country not in total_countries_w_errros:
         full_name_country = df[df['countryiso3code'] == country]['country'].values[0]
 
@@ -100,7 +100,7 @@ for country in countries[0:5]:
 
                 y_error_predict = [fit_funtion_error(i, parameters_error) for i in x_error]
                 x_error_predict_extra = [float(i) for i in range(int(x_error[-1:][0] + 1), 2026)]
-                print(x_error_predict_extra)
+
                 y_error_predict_extra = [fit_funtion_error(i, parameters_error) for i in x_error_predict_extra]
 
                 if np.abs(y_error_predict_extra[-1]) > 1.5:
