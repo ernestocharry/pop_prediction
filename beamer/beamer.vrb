@@ -1,0 +1,15 @@
+\frametitle{Modelos exponencial con corrección de los últimos años}
+\begin{equation*}
+P(t+1) = A\,\exp(B\,t) + \overline{\delta},
+\end{equation*}
+\begin{equation*}
+\delta = P(t) - P_\text{real}(t)
+\end{equation*}
+\begin{verbatim}
+y_predict = exp(x[j+4], parameters) - mean(delta[-2:])
+delta = y_predict-y[j+4]
+\end{verbatim}
+\begin{figure}
+\includegraphics[scale=0.35]{img/7.png}
+\includegraphics[scale=0.35]{img/8.png}
+\end{figure}
