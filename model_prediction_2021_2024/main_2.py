@@ -47,7 +47,7 @@ total_countries_w_errros = []
 
 countries = df_group.index.get_level_values(0).unique()
 
-for country in countries[0:5]:
+for country in countries:
     if country not in total_countries_w_errros:
         full_name_country = df[df['countryiso3code'] == country]['country'].values[0]
 
@@ -249,11 +249,11 @@ for country in countries:
             if country != 'ERI' and country != 'KWT' and country != 'CPV' and country != 'GNB':
                 X = \
                     df_all[
-                        (df_all['date'] <= 2015) & (df_all['date'] >= 2010) & (df_all['countryiso3code'] == country)][
+                        (df_all['date'] <= 2020) & (df_all['date'] >= 2010) & (df_all['countryiso3code'] == country)][
                         ['date', 'value_2', 'value_3', 'value_4']]
                 Y = \
                     df_all[
-                        (df_all['date'] <= 2015) & (df_all['date'] >= 2010) & (df_all['countryiso3code'] == country)][
+                        (df_all['date'] <= 2020) & (df_all['date'] >= 2010) & (df_all['countryiso3code'] == country)][
                         'value_0']
 
                 neigh = linear_model.Ridge(alpha=.5)
