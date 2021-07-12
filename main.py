@@ -8,6 +8,19 @@ import random
 from scipy.stats.stats import pearsonr
 from sklearn.svm import SVR
 
+
+def fit_funtion(x, parameters):
+    return np.exp(parameters[1]) * np.exp(x * parameters[0])
+
+
+def fit_funtion_error(x, parameters):
+    return parameters[0] * x * x + parameters[1] * x + parameters[2]
+
+
+def fit_funtion_error_line(x, parameters):
+    return parameters[0] * x + parameters[1]
+
+
 df = pd.read_csv('data/df.csv')
 df_1 = pd.read_csv('data/df_1.csv')
 df_2 = pd.read_csv('data/df_2.csv')
