@@ -1,3 +1,12 @@
+# Bearmer files
+*.aux
+*.log
+*.nav
+*.out
+*.snm
+*.toc
+*.vrb
+
 ### Python template
 # Byte-compiled / optimized / DLL files
 __pycache__/
