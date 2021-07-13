@@ -189,17 +189,14 @@ if __name__ == "__main__":
     # df_3 = download_indicator('SP.DYN.AMRT.FE')
     # df_4 = download_indicator('SP.DYN.TFRT.IN')
 
-    df['date'] = df['date'].astype(float)
-    # df_1['date'] = df_1['date'].astype(float)
-    # df_2['date'] = df_2['date'].astype(float)
-    # df_3['date'] = df_3['date'].astype(float)
-    # df_4['date'] = df_4['date'].astype(float)
+    countries_w_errros = []
+    df_group_min_mean_max, countries_w_errros = extrapolation_with_exponential_monteCarlo(df, countries_w_errros)
+    df_group_2_min_mean_max, countries_w_errros = extrapolation_with_exponential_monteCarlo(df_2, countries_w_errros)
+    df_group_3_min_mean_max, countries_w_errros = extrapolation_with_exponential_monteCarlo(df_3, countries_w_errros)
+    df_group_4_min_mean_max, countries_w_errros = extrapolation_with_exponential_monteCarlo(df_4, countries_w_errros)
 
-    df_group = df[df['date'] >= 1990].groupby(['countryiso3code', 'date'])['value'].sum().copy()
-    # df_group_1 = df_1[df_1['date']>=1990].groupby(['countryiso3code', 'date'])['value'].sum().copy()
-    # df_group_2 = df_2[df_2['date']>=1990].groupby(['countryiso3code', 'date'])['value'].sum().copy()
-    # df_group_3 = df_3[df_3['date']>=1990].groupby(['countryiso3code', 'date'])['value'].sum().copy()
-    # df_group_4 = df_4[df_4['date']>=1990].groupby(['countryiso3code', 'date'])['value'].sum().copy()
+    countries_w_errros.append(['CPV', 'GNB'])
+    print('Total errors: ', len(countries_w_errros))
 
     df_group_min_mean_max = extrapolation_with_exponential_monteCarlo(df_group)
     print('main')
