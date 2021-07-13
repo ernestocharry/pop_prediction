@@ -40,23 +40,30 @@ def fit_funtion_error_line(x, parameters):
     return parameters[0] * x + parameters[1]
 
 
-def extrapolation_with_exponential_monteCarlo(df_group):
-    df_group_min_mean_max = df_group.copy()
-    total_countries_w_errros = []
-    countries = df_group.index.get_level_values(0).unique()
+def extrapolation_with_exponential_monteCarlo(df, total_countries_w_errros):
+    df['date'] = df['date'].astype(float)
+    df['value_min'] = df['value'].copy()
+    df['value_max'] = df['value'].copy()
 
-    for country in countries[0:25]:
+    df_group = df[df['date'] >= 1990].groupby(['countryiso3code', 'date'])[
+        ['value', 'value_min', 'value_max']].sum().copy()
+    df_group_min_mean_max = df_group.copy()
+    df_group_min_mean_max['value_min'] = df_group_min_mean_max['value'].copy()
+    df_group_min_mean_max['value_max'] = df_group_min_mean_max['value'].copy()
+
+    countries = df_group.index.get_level_values(0).unique()
+    for country in countries:
         if country not in total_countries_w_errros:
             try:
-                x = df_group[df_group['value'] != 0].loc[country].index.tolist()
-                y = df_group[df_group['value'] != 0].loc[country].values.tolist()
+                x = df_group[df_group['value'] != 0]['value'].loc[country].index.tolist()
+                y = df_group[df_group['value'] != 0]['value'].loc[country].values.tolist()
 
                 x_min = x.copy()
                 x_max = x.copy()
                 y_min = y.copy()
                 y_max = y.copy()
 
-                if all(v[0] == 0.0 for v in y):
+                if all(v == 0.0 for v in y):
                     continue
 
                 x_adjustment = []
@@ -81,7 +88,7 @@ def extrapolation_with_exponential_monteCarlo(df_group):
                     x_adjustment.append(x[j + 4])
                     y_adjustment.append(y_predict)
                     delta_y_adjustment.append(y_predict - y[j + 4])
-                    delta_y_adjustment_normal.append(((y_predict - y[j + 4]) * 100 / y_predict)[0])
+                    delta_y_adjustment_normal.append(((y_predict - y[j + 4]) * 100 / y_predict))
 
                 # predict x from the last years to 2026
                 x_error_predict_extra = [float(i) for i in range(int(x_adjustment[-1] + 1), 2026)]
@@ -169,7 +176,9 @@ def extrapolation_with_exponential_monteCarlo(df_group):
             except:
                 print("An exception occurred with ", country)
                 total_countries_w_errros.append(country)
-    return df_group_min_mean_max
+    df_group_min_mean_max.loc[df_group_min_mean_max['value_min'].isnull(), 'value_min'] = \
+        df_group_min_mean_max.loc[df_group_min_mean_max['value_min'].isnull(), 'value']
+    return df_group_min_mean_max, countries_w_errros
 
 
 if __name__ == "__main__":
