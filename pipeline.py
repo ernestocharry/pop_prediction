@@ -176,7 +176,7 @@ def extrapolation_with_exponential_monteCarlo(df, total_countries_w_errros):
                     parameters_max, res, _, _, _ = np.polyfit(x1_max, np.log(y1_max), 1, full=True)
 
             except:
-                print("An exception occurred with ", country)
+                # print("An exception occurred with ", country)
                 total_countries_w_errros.append(country)
     df_group_min_mean_max.loc[df_group_min_mean_max['value_min'].isnull(), 'value_min'] = \
         df_group_min_mean_max.loc[df_group_min_mean_max['value_min'].isnull(), 'value']
@@ -256,7 +256,6 @@ if __name__ == "__main__":
     df_group_4_min_mean_max, countries_w_errros = extrapolation_with_exponential_monteCarlo(df_4, countries_w_errros)
 
     countries_w_errros.append(['CPV', 'GNB'])
-    print('Total errors: ', len(countries_w_errros))
 
     df_all = df_group_2_min_mean_max.merge(df_group_3_min_mean_max, how='outer',
                                            on=['countryiso3code', 'date'], suffixes=('_2', '_3')
@@ -265,4 +264,7 @@ if __name__ == "__main__":
                                                    ).merge(df_group_min_mean_max, how='outer',
                                                            on=['countryiso3code', 'date'], suffixes=('_4', '_0')
                                                            )
-    print('main')
+
+    df_all = ml_model(df_all, countries_w_errros)
+    df_all.to_csv('results_predictions_pipeline.csv')
+    print('Total countries with errors: ', len(countries_w_errros))
