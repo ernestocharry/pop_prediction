@@ -27,6 +27,18 @@ def download_indicator(indicator):
     return df
 
 
+def fit_funtion(x, parameters):
+    return np.exp(parameters[1])*np.exp(x*parameters[0])
+
+
+def fit_funtion_error(x, parameters):
+    return parameters[0]*x*x + parameters[1]*x + parameters[2]
+
+
+def fit_funtion_error_line(x, parameters):
+    return parameters[0]*x + parameters[1]
+
+
 if __name__ == "__main__":
     print('main')
 
