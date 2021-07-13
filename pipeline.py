@@ -24,6 +24,7 @@ def download_indicator(indicator):
         url = 'http://api.worldbank.org/v2/country/all/indicator/' + indicator + '?page=' + str(page) + '&format=json'
         response = requests.get(url).json()
         df = df.append(pd.DataFrame.from_dict(response[1]), ignore_index=True)
+        print(page)
     return df
 
 
@@ -40,10 +41,12 @@ def fit_funtion_error_line(x, parameters):
 
 
 def extrapolation_with_exponential_monteCarlo(df_group):
+    df_group_min_mean_max = df_group.copy()
+    total_countries_w_errros = []
+    countries = df_group.index.get_level_values(0).unique()
+
     for country in countries[0:25]:
         if country not in total_countries_w_errros:
-            full_name_country = df[df['countryiso3code'] == country]['country'].values[0]
-
             try:
                 x = df_group[df_group['value'] != 0].loc[country].index.tolist()
                 y = df_group[df_group['value'] != 0].loc[country].values.tolist()
@@ -166,7 +169,28 @@ def extrapolation_with_exponential_monteCarlo(df_group):
             except:
                 print("An exception occurred with ", country)
                 total_countries_w_errros.append(country)
+    return df_group_min_mean_max
 
 
 if __name__ == "__main__":
+    #df = download_indicator('SP.POP.TOTL')
+    df = pd.read_csv('data/df.csv')
+    # df_1 = download_indicator('SM.POP.NETM')
+    # df_2 = download_indicator('SP.DYN.AMRT.MA')
+    # df_3 = download_indicator('SP.DYN.AMRT.FE')
+    # df_4 = download_indicator('SP.DYN.TFRT.IN')
+
+    df['date'] = df['date'].astype(float)
+    # df_1['date'] = df_1['date'].astype(float)
+    # df_2['date'] = df_2['date'].astype(float)
+    # df_3['date'] = df_3['date'].astype(float)
+    # df_4['date'] = df_4['date'].astype(float)
+
+    df_group = df[df['date'] >= 1990].groupby(['countryiso3code', 'date'])['value'].sum().copy()
+    # df_group_1 = df_1[df_1['date']>=1990].groupby(['countryiso3code', 'date'])['value'].sum().copy()
+    # df_group_2 = df_2[df_2['date']>=1990].groupby(['countryiso3code', 'date'])['value'].sum().copy()
+    # df_group_3 = df_3[df_3['date']>=1990].groupby(['countryiso3code', 'date'])['value'].sum().copy()
+    # df_group_4 = df_4[df_4['date']>=1990].groupby(['countryiso3code', 'date'])['value'].sum().copy()
+
+    df_group_min_mean_max = extrapolation_with_exponential_monteCarlo(df_group)
     print('main')
