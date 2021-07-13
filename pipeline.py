@@ -12,6 +12,8 @@ from scipy.optimize import curve_fit
 import random
 from scipy.stats.stats import pearsonr
 from sklearn.svm import SVR
+from sklearn.neighbors import KNeighborsRegressor
+from sklearn import linear_model
 
 
 def download_indicator(indicator):
@@ -179,6 +181,47 @@ def extrapolation_with_exponential_monteCarlo(df, total_countries_w_errros):
     df_group_min_mean_max.loc[df_group_min_mean_max['value_min'].isnull(), 'value_min'] = \
         df_group_min_mean_max.loc[df_group_min_mean_max['value_min'].isnull(), 'value']
     return df_group_min_mean_max, countries_w_errros
+
+
+def ml_model(df_all, countries_w_errros):
+    df_all['value_KNeighbors'] = df_all['value_0'].copy()
+    df_all['value_KNeighbors_min'] = df_all['value_0'].copy()
+    df_all['value_KNeighbors_max'] = df_all['value_0'].copy()
+
+    df_all.reset_index(inplace=True)
+    countries = df_all['countryiso3code'].unique()
+
+    for country in countries:
+        try:
+            if country not in countries_w_errros:
+                X = df_all[
+                    (df_all['date'] <= 2020) & (df_all['date'] >= 2015) & (df_all['countryiso3code'] == country)][
+                    ['date', 'value_2', 'value_3', 'value_4']]
+                Y = df_all[
+                    (df_all['date'] <= 2020) & (df_all['date'] >= 2015) & (df_all['countryiso3code'] == country)][
+                    'value_0']
+
+                neigh = linear_model.Ridge(alpha=.5)
+                neigh.fit(X.values, Y.values)
+
+                X_to_predict = df_all[df_all['countryiso3code'] == country][
+                    ['date', 'value_2', 'value_3', 'value_4']]
+                Y_to_predict_fit = neigh.predict(X_to_predict.values)
+                df_all.loc[df_all['countryiso3code'] == country, 'value_KNeighbors'] = Y_to_predict_fit
+
+                X_to_predict = df_all[(df_all['countryiso3code'] == country)][
+                    ['date', 'value_min_2', 'value_min_3', 'value_min_4']]
+                Y_to_predict_fit = neigh.predict(X_to_predict.values)
+                df_all.loc[df_all['countryiso3code'] == country, 'value_KNeighbors_min'] = Y_to_predict_fit
+
+                X_to_predict = df_all[(df_all['countryiso3code'] == country)][
+                    ['date', 'value_max_2', 'value_max_3', 'value_max_4']]
+                Y_to_predict_fit = neigh.predict(X_to_predict.values)
+                df_all.loc[df_all['countryiso3code'] == country, 'value_KNeighbors_max'] = Y_to_predict_fit
+        except:
+            print("An exception occurred with ", country)
+            countries_w_errros.append(country)
+    return df_all
 
 
 if __name__ == "__main__":
