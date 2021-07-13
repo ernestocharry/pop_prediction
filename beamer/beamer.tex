@@ -68,7 +68,7 @@ P(t) &\propto f(t, n, d,m), \\
 \end{columns}
 \end{frame}
 
-\begin{frame}{Modelos inicial}
+\begin{frame}{Modelos inicial: $P(t) = A\, \exp(B\,t)$ }
 $P(t)$ depende únicamente del tiempo $t$ de forma exponencial, 
 \begin{figure}
 \includegraphics[scale=0.35]{img/7.png}
@@ -89,9 +89,52 @@ y_predict = exp(x[j+4], parameters) - mean(delta[-2:])
 delta = y_predict - y[j+4]
 \end{verbatim}
 \begin{figure}
-\includegraphics[scale=0.35]{img/7.png}
-\includegraphics[scale=0.35]{img/8.png}
+\includegraphics[scale=0.28]{img/9.png}
+\includegraphics[scale=0.28]{img/10.png}
+\includegraphics[scale=0.28]{img/11.png}
+\includegraphics[scale=0.28]{img/12.png}
 \end{figure}
+\end{frame}
+
+\begin{frame}{¿Podemos predecir el «error»? Yes, yes, claro que yes. }
+\begin{figure}
+\centering
+\includegraphics[scale=0.15]{img/15.jpg}
+\caption{Monte Carlo $\approx 10^{4}$ ($10^{2}$), value mínimo, máximo y promedio.}
+\end{figure}
+\begin{figure}
+\includegraphics[scale=0.3]{img/13.png}
+\includegraphics[scale=0.3]{img/14.png}
+\end{figure}
+$P(t)$, $n(t)$ y $d(t)$ hasta $t\rightarrow 2024$.
+\end{frame}
+
+\begin{frame}[fragile]{ML: Lineal}
+\begin{itemize}
+\item K-Nearest Neighbor regression (KNN)
+\item Support Vector Regression (SVR)
+\item Gaussian Processes (GP)
+\end{itemize}
+Modelo lineal utilizando $t$, $n(t)$ y $d(t)$.
+\begin{verbatim}
+X = df_all[(df_all['date']<=2015) & (df_all['date']>=2010)]
+Y = df_all[(df_all['date']<=2015) & (df_all['date']>=2010)]
+
+neigh = linear_model.Ridge(alpha=.5)
+
+neigh.fit(X.values, Y.values)
+
+neigh.predict(X_to_predict.values)
+\end{verbatim}
+\end{frame}
+
+\begin{frame}{Conclusiones}
+\begin{itemize}
+\item \justifying Ambos modelos «lineales» nos permite predecir la población de cada país para los próximos cuatro años.
+\item Debido a la localidad del modelo «exponencial», se escoge el modelo lineal en referencia a los límites máximos, mínimos y promedio. 
+\item Para el análisis de datos, es posible utilizar la pendiente del modelo inicial $P(t)=A\,\exp(B\,t)$ y sus correlaciones con otras variables (puede ser índices geográficos).
+\item Aunque falta realizar muchos experimentos y fine tune, estos modelos son un excelente primer paso en el entendimiento y la predicción de la población mundial. Se recomienda modelos avanzados una vez se entienda el fenómeno en modelos simples. 
+\end{itemize}
 \end{frame}
 
 
