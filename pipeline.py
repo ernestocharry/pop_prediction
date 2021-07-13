@@ -15,7 +15,7 @@ from sklearn.svm import SVR
 
 
 def download_indicator(indicator):
-    # Given a indicator, download all the data
+    # Given a indicator, download ALL the data and save it into DataFrame df
     seed = 'http://api.worldbank.org/v2/country/all/indicator/'+indicator+'?format=json'
     response_seed = requests.get(seed).json()
     df = pd.DataFrame.from_dict(response_seed[1])
@@ -25,3 +25,8 @@ def download_indicator(indicator):
         response = requests.get(url).json()
         df = df.append(pd.DataFrame.from_dict(response[1]), ignore_index=True)
     return df
+
+
+if __name__ == "__main__":
+    print('main')
+
