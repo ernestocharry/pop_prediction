@@ -198,5 +198,11 @@ if __name__ == "__main__":
     countries_w_errros.append(['CPV', 'GNB'])
     print('Total errors: ', len(countries_w_errros))
 
-    df_group_min_mean_max = extrapolation_with_exponential_monteCarlo(df_group)
+    df_all = df_group_2_min_mean_max.merge(df_group_3_min_mean_max, how='outer',
+                                           on=['countryiso3code', 'date'], suffixes=('_2', '_3')
+                                           ).merge(df_group_4_min_mean_max, how='outer',
+                                                   on=['countryiso3code', 'date']
+                                                   ).merge(df_group_min_mean_max, how='outer',
+                                                           on=['countryiso3code', 'date'], suffixes=('_4', '_0')
+                                                           )
     print('main')
