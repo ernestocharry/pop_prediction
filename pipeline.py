@@ -2,7 +2,8 @@
 # 1) Download the data for each feature
 # 2) Extrapolar the features up to 2024
 # 3) Predict using ML model
-
+import os
+import sys
 import numpy as np
 import pandas as pd
 import matplotlib.pyplot as plt
@@ -225,12 +226,29 @@ def ml_model(df_all, countries_w_errros):
 
 
 if __name__ == "__main__":
-    #df = download_indicator('SP.POP.TOTL')
-    df = pd.read_csv('data/df.csv')
-    # df_1 = download_indicator('SM.POP.NETM')
-    # df_2 = download_indicator('SP.DYN.AMRT.MA')
-    # df_3 = download_indicator('SP.DYN.AMRT.FE')
-    # df_4 = download_indicator('SP.DYN.TFRT.IN')
+
+    for i in sys.argv[1:]:
+        if i.startswith('load='):
+            load = i[i.find('=') + 1:]
+        if i.startswith('montecarlo='):
+            nomontecarlo = int(float(i[i.find('=') + 1:]))
+
+    if "load" not in globals():
+        load = False
+    if 'nomontecarlo' not in globals():
+        nomontecarlo = 100
+
+    if load:
+        df = pd.read_csv('data/df.csv')
+        df_2 = pd.read_csv('data/df_2.csv')
+        df_3 = pd.read_csv('data/df_3.csv')
+        df_4 = pd.read_csv('data/df_4.csv')
+    else:
+        df = download_indicator('SP.POP.TOTL')
+        df_1 = download_indicator('SM.POP.NETM')
+        df_2 = download_indicator('SP.DYN.AMRT.MA')
+        df_3 = download_indicator('SP.DYN.AMRT.FE')
+        df_4 = download_indicator('SP.DYN.TFRT.IN')
 
     countries_w_errros = []
     df_group_min_mean_max, countries_w_errros = extrapolation_with_exponential_monteCarlo(df, countries_w_errros)
