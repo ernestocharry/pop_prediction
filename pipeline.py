@@ -98,8 +98,7 @@ def extrapolation_with_exponential_monteCarlo(df, total_countries_w_errros):
                 MonteCarlo = pd.DataFrame([], columns=x_error_predict_extra)
 
                 total_range = [i for i in range(-20, -1)]
-
-                for monteCarlo in range(100):  # 10^2 errors
+                for monteCarlo in range(nomontecarlo):  # 10^2 errors, nomontecarlo is a input value
 
                     # Random select 8 years, include the last two years
                     random_index = np.sort(np.unique(random.sample(total_range, 6) + [-1, -2]))
